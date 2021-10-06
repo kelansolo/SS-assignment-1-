@@ -14,21 +14,16 @@ y = y/max(y)*.5;
 subplot(3,3,1);
 tn = 0: 1/fs_y: 1-1/fs_y;
 plot(tn(1:fs_y),(y(1:fs_y))); %fs[Hz]--> fs samples/s
-title('Real piano signal (time)')
-xlabel('time [s]')
-ylabel('Amplitude')
+
 %Plot frequency spectrum
 subplot(3,3,2);
 [Y,freq]= make_spectrum(y,fs_y);
-scatter(freq,20*log10(abs(Y)),'.')
-title('Real piano signal (freq)')
-xlabel('freq [Hz]')
-ylabel('Amplitude');
+scatter(freq,20*log10(abs(Y)),'.');
 
 %% sythensize signal
 f0=130; %[Hz]
 T=2; %Total time
-n=10; %Number of harmonics
+n=5; %Number of harmonics
 tn=0:1/fs_y:T-1/fs_y; 
 N=length(tn); %number of samples
 
@@ -43,6 +38,7 @@ for k=1:n %adding freqencies to Y_syn
     sintest=sintest+sin(2*pi*k*f0*tn);
 end
 %% Plot sythesized signal
+
 %Plot signal in frequency domain (IMAG)
 subplot(3,3,4); 
 stem(freq,imag(Y_syn)); %plot freqency plot
@@ -67,6 +63,7 @@ ylabel('Amplitude')
 %% synthesized signal with phase
 %theta=ones(1,N).*pi/2;
 theta=angle(Y);
+
 Y_syn_theta=zeros(1,N);
 for k=1:n %adding freqencies to Y_syn_theta
     Y_syn_theta(1,k*f0/deltaf+1)=-(exp(1i*theta(k*f0/deltaf+1))/2)*1i;
@@ -97,24 +94,5 @@ title('Synthesized signal with phase (time)')
 xlabel('time [s]')
 ylabel('Amplitude')
 %%
-soundsc(ifft(Y_syn),fs_y)
-%soundsc(y_w_phase,fs_y)
-
-
-%%
-% %plot correct signal in frequency domain (with sinus)
-% subplot(3,2,5)
-% [Y,freq]= make_spectrum(sintest,fs_y);
-% stem(freq,imag(Y))
-% title('Real Imag signal (freq)')
-% xlabel('freq[Hz]')
-% ylabel('Amplitude')
-% 
-% %plot correct signal in time domain (with sinus)
-% subplot(3,2,6)
-% plot(tn,ifft(Y))
-% title('Real signal (time)')
-% xlabel('time [s]')
-% ylabel('Amplitude')
-% %sound(ifft(Y),fs_y)
-%%
+%soundsc(ifft(Y_syn),fs_y)
+soundsc(y_w_phase,fs_y)
